@@ -1,6 +1,8 @@
 import React from 'react';
 import hookActions from './actions/hookActions';
 
+import Input from './Input';
+
 const reducer = (state, action) => {
   switch (action.type) {
     case 'setSecretWord':
@@ -17,9 +19,25 @@ function App() {
     { secretWord: null }
   );
   const setSecretWord = secretWord => dispatch({ type: 'setSecretWord', payload: secretWord });
-  React.useEffect(() => hookActions.getSecretWord(setSecretWord), []);
+  React.useEffect(() => {
+    hookActions.getSecretWord(setSecretWord)
+  }, []);
+
+  if (!state.secretWord) {
+    return (
+      <div className="container" data-test="spinner">
+        <div className="spinner-border" role="status" />
+        <p>Loading secre word</p>
+      </div>
+    );
+  }
+
   return (
-    <div data-test="component-app" />
+    <div className="container">
+      <div data-test="component-app">
+        <Input secretWord={state.secretWord} />
+      </div>
+    </div>
   );
 }
 
